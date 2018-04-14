@@ -1,0 +1,610 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>BATCH Handle Client &#8212; PyHandle 1.0.3 documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="DB Handle Client" href="pyhandleclientdb.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyhandleclientdb.html" title="DB Handle Client"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyHandle 1.0.3 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">BATCH Handle Client</a><ul>
+<li><a class="reference internal" href="#basic-handle-interaction">Basic Handle interaction</a></li>
+<li><a class="reference internal" href="#instantiation">Instantiation</a></li>
+<li><a class="reference internal" href="#creating-batch-files">Creating batch files</a></li>
+<li><a class="reference internal" href="#batch-operations">Batch operations</a><ul>
+<li><a class="reference internal" href="#authententicating-to-handle-server">Authententicating to Handle server</a></li>
+<li><a class="reference internal" href="#registering-new-handles">Registering new Handles</a></li>
+<li><a class="reference internal" href="#deleting-a-handle">Deleting a Handle</a></li>
+<li><a class="reference internal" href="#modifying-a-handle-value">Modifying a Handle value</a><ul>
+<li><a class="reference internal" href="#example">Example:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adding-handle-values">Adding Handle values</a><ul>
+<li><a class="reference internal" href="#id1">Example:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#deleting-handle-values">Deleting Handle values</a><ul>
+<li><a class="reference internal" href="#id2">Example:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#executing-the-batch-file">Executing the batch file</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#full-method-documentation">Full method documentation</a><ul>
+<li><a class="reference internal" href="#constructors">Constructors</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#batch-file-methods">Batch file methods</a></li>
+<li><a class="reference internal" href="#helper-methods">Helper methods</a></li>
+<li><a class="reference internal" href="#module-pyhandle.batchhsexceptions">Exceptions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="pyhandleclientdb.html"
+                        title="previous chapter">DB Handle Client</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/pyhandleclientbatch.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="batch-handle-client">
+<h1>BATCH Handle Client<a class="headerlink" href="#batch-handle-client" title="Permalink to this headline">¶</a></h1>
+<p>The Batch Handle client provides methods to create, update and delete Handles by creating customized batch files.
+Batch files contain handle operations that can be submitted using the <em>GenericBatch</em> command line utility, which can be invoked using the following command:</p>
+<blockquote>
+<div><cite>bin/hdl-genericbatch &lt;batchfile&gt; [&lt;LogFile&gt;] [-verbose]</cite></div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The batch facilities are included with the Handle.net software distribution.</p>
+</div>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">All batch operations require authentication to the Handle server. <em>Users</em> can authenticate by <em>SECKEY</em> or <em>PUBKEY</em> (see <a class="reference internal" href="#authententicating-to-handle-server">Authententicating to Handle server</a>)</p>
+</div>
+<div class="section" id="basic-handle-interaction">
+<h2>Basic Handle interaction<a class="headerlink" href="#basic-handle-interaction" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Creating a Handle</dt>
+<dd>Use <a class="reference internal" href="#pyhandle.client.batchhandleclient.BatchHandleClient.register_handle_batch" title="pyhandle.client.batchhandleclient.BatchHandleClient.register_handle_batch"><code class="xref py py-meth docutils literal notranslate"><span class="pre">register_handle_batch()</span></code></a> to create a Handle with a custom name</dd>
+<dt>Deleting a Handle</dt>
+<dd>Use <a class="reference internal" href="#pyhandle.client.batchhandleclient.BatchHandleClient.delete_handle" title="pyhandle.client.batchhandleclient.BatchHandleClient.delete_handle"><code class="xref py py-meth docutils literal notranslate"><span class="pre">delete_handle()</span></code></a> to delete a Handle and its records.</dd>
+<dt>Modifying a Handle</dt>
+<dd>Use <a class="reference internal" href="#pyhandle.client.batchhandleclient.BatchHandleClient.modify_handle_value" title="pyhandle.client.batchhandleclient.BatchHandleClient.modify_handle_value"><code class="xref py py-meth docutils literal notranslate"><span class="pre">modify_handle_value()</span></code></a> to modify a Handle value.</dd>
+<dt>Adding a Handle value</dt>
+<dd>Use <a class="reference internal" href="#pyhandle.client.batchhandleclient.BatchHandleClient.add_handle_value" title="pyhandle.client.batchhandleclient.BatchHandleClient.add_handle_value"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_handle_value()</span></code></a> to add a new value to the existing Handle.</dd>
+</dl>
+</div>
+<div class="section" id="instantiation">
+<h2>Instantiation<a class="headerlink" href="#instantiation" title="Permalink to this headline">¶</a></h2>
+<p>The Batch client is instantiated as follows:</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyhandle.handleclient</span> <span class="k">import</span> <span class="n">PyHandleClient</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">PyHandleClient</span><span class="p">(</span><span class="s1">&#39;batch&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If no additional parameters are passed to <em>PyHandleClient</em>, a default path for the batch file will be set <em>/&lt;homedirectory&gt;/handle_batch</em>.
+In order to specify your own path add it as parameter:</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">batch_file_path</span> <span class="o">=</span> <span class="s1">&#39;/abs/path&#39;</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">PyHandleClient</span><span class="p">(</span><span class="s1">&#39;batch&#39;</span><span class="p">,</span> <span class="n">batch_file_path</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Instantiation only selects the Handle client and set the path of the batch file. The latter is created by the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">create_batch_file()</span></code>.</p>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">The absolute path should be given: /abc/xyz/batch_file_name. This path will be used for all operations that come after the instantiation.</p>
+</div>
+</div>
+<div class="section" id="creating-batch-files">
+<h2>Creating batch files<a class="headerlink" href="#creating-batch-files" title="Permalink to this headline">¶</a></h2>
+<p>The next step after the instantiation is to create an empty batch file, which contains all the batch operations.
+The latter are <em>appended</em> to the created file. To create a batch file use the following code:</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">create_batch_file</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This method takes the path specified during the instantiation and checks if the file exists.
+If <em>overwrite</em> is set to True the batch file is overwritten, otherwise an exception is thrown.</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">create_batch_file</span><span class="p">(</span><span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Default of overwrite is False.</p>
+</div>
+<div class="section" id="batch-operations">
+<h2>Batch operations<a class="headerlink" href="#batch-operations" title="Permalink to this headline">¶</a></h2>
+<p>The following operations are written on the batch file. For the execution see <a class="reference internal" href="#executing-the-batch-file">Executing the batch file</a></p>
+<div class="section" id="authententicating-to-handle-server">
+<h3>Authententicating to Handle server<a class="headerlink" href="#authententicating-to-handle-server" title="Permalink to this headline">¶</a></h3>
+<p>In order to administer Handles, you must have administrative rights.
+First line is the operation name: ‘AUTHENTICATE’.
+There are two possibilities to authenticate to Handle server:</p>
+<ul class="simple">
+<li>By SECKEY (<a class="reference internal" href="#pyhandle.client.batchhandleclient.BatchHandleClient.authenticate_seckey" title="pyhandle.client.batchhandleclient.BatchHandleClient.authenticate_seckey"><code class="xref py py-meth docutils literal notranslate"><span class="pre">authenticate_seckey()</span></code></a>): Users must provide {username}:{password} as parameters.
+The <em>username</em> is the usual Handle identity {index}:{handle}.</li>
+</ul>
+<p>First line:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">AUTHENTICATE</span> <span class="n">SECKEY</span><span class="p">:</span><span class="n">admin_index</span><span class="p">:</span><span class="n">admin_handle</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Second line:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">password</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>By PUBKEY (<a class="reference internal" href="#pyhandle.client.batchhandleclient.BatchHandleClient.authenticate_pubkey" title="pyhandle.client.batchhandleclient.BatchHandleClient.authenticate_pubkey"><code class="xref py py-meth docutils literal notranslate"><span class="pre">authenticate_pubkey()</span></code></a>): Users must provide a private key.</li>
+</ul>
+<p>First line:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">AUTHENTICATE</span> <span class="n">PUBKEY</span><span class="p">:</span> <span class="n">admin_index</span><span class="p">:</span><span class="n">admin_handle</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Second line: if your private key was created and encrypted by passphrase, then:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">private_key_file_path</span> <span class="o">+</span> <span class="s1">&#39;|&#39;</span> <span class="o">+</span> <span class="n">passphrase</span>
+</pre></div>
+</div>
+<p>otherwise</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">private_key_file_path</span>
+</pre></div>
+</div>
+<p>Example of authentication with user name and password:</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">username</span> <span class="o">=</span> <span class="s1">&#39;index:prefix/suffix&#39;</span>
+<span class="n">password</span> <span class="o">=</span> <span class="s1">&#39;passoword&#39;</span>
+<span class="n">client</span><span class="o">.</span><span class="n">authenticate_seckey</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>From a credential file: it is also possible to set authentication credentials from a json file. By using the method <a class="reference internal" href="#pyhandle.client.batchhandleclient.BatchHandleClient.authenticate_with_credentials" title="pyhandle.client.batchhandleclient.BatchHandleClient.authenticate_with_credentials"><code class="xref py py-meth docutils literal notranslate"><span class="pre">authenticate_with_credentials()</span></code></a></li>
+</ul>
+<p>Example:</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyhandle.clientcredentials</span> <span class="k">import</span> <span class="n">PIDClientCredentials</span>
+<span class="n">cred</span> <span class="o">=</span> <span class="n">PIDClientCredentials</span><span class="o">.</span><span class="n">load_from_JSON</span><span class="p">(</span><span class="s1">&#39;my_credentials.json&#39;</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">authenticate_with_credentials</span><span class="p">(</span><span class="n">cred</span><span class="p">,</span> <span class="n">auth_type</span><span class="o">=</span><span class="s1">&#39;seckey&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will call the method <a class="reference internal" href="#pyhandle.client.batchhandleclient.BatchHandleClient.authenticate_seckey" title="pyhandle.client.batchhandleclient.BatchHandleClient.authenticate_seckey"><code class="xref py py-meth docutils literal notranslate"><span class="pre">authenticate_seckey()</span></code></a></p>
+<p>The JSON file should look like this:</p>
+<blockquote>
+<div><div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;client&quot;</span><span class="p">:</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;username&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;password&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;private_key&quot;</span><span class="p">:</span> <span class="s2">&quot;path/to/private_key&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;passphrase&quot;</span><span class="p">:</span> <span class="s2">&quot;passphrase&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>This json file contains all mandatory and optional arguments. Depending on the authentication type, the required arguments should be added to json file.</p>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">When the private key is encrypted, the ‘passphrase’ must be added to json file.</p>
+</div>
+</div>
+<div class="section" id="registering-new-handles">
+<h3>Registering new Handles<a class="headerlink" href="#registering-new-handles" title="Permalink to this headline">¶</a></h3>
+<p>In order to create a new Handle, the method <a class="reference internal" href="#pyhandle.client.batchhandleclient.BatchHandleClient.register_handle_batch" title="pyhandle.client.batchhandleclient.BatchHandleClient.register_handle_batch"><code class="xref py py-meth docutils literal notranslate"><span class="pre">register_handle_batch()</span></code></a>  is used with the the following parameters:</p>
+<ul class="simple">
+<li>handle: The full name of the handle to be registered (prefix and suffix)</li>
+<li>location: The URL of the data entity to be referenced</li>
+<li>hdl_admin_index: Unique index number. This concerns the administrator of the Handle not the Handle itself.</li>
+<li>admin_handle: The name of the administrator of the Handle</li>
+<li>perm: Permissions of the <em>admin_handle</em></li>
+</ul>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;wwww.example.com&#39;</span>
+
+<span class="n">user</span> <span class="o">=</span> <span class="s1">&#39;300:123/abc&#39;</span>
+
+<span class="n">pw</span> <span class="o">=</span> <span class="s1">&#39;password&#39;</span>
+
+<span class="n">handle</span> <span class="o">=</span> <span class="s1">&#39;123/xyz&#39;</span>
+
+<span class="n">hdl_admin_index</span> <span class="o">=</span> <span class="mi">300</span>
+
+<span class="n">admin_handle</span> <span class="o">=</span> <span class="s1">&#39;123/admin&#39;</span>
+
+<span class="n">perm</span> <span class="o">=</span> <span class="s1">&#39;110011111110&#39;</span>
+
+<span class="n">client</span><span class="o">.</span><span class="n">register_handle_batch</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">hdl_admin_index</span><span class="p">,</span> <span class="n">admin_handle</span><span class="p">,</span> <span class="n">perm</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The order of permissions MUST be respected and has the following sequence: (add handle, delete handle, no add naming authority, no delete naming authority, modify values, remove values, add values, read values, modify administrator, remove administrator, add administrator, list handles)</p>
+</div>
+</div>
+<div class="section" id="deleting-a-handle">
+<h3>Deleting a Handle<a class="headerlink" href="#deleting-a-handle" title="Permalink to this headline">¶</a></h3>
+<p>For deleting Handles, only the name of the Handle is required. The operation name is <em>DELETE</em>
+These line will be written:</p>
+<p>DELETE + space + handle_name</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DELETE</span> <span class="mi">123</span><span class="o">/</span><span class="n">abc</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="modifying-a-handle-value">
+<h3>Modifying a Handle value<a class="headerlink" href="#modifying-a-handle-value" title="Permalink to this headline">¶</a></h3>
+<p>To modify a Handle value, there must be a Handle value line to define the administrator of the handle.
+Each Handle value line must start with a unique index number, followed by the handle value type, ttl, the permission set (admin read, admin write, public read, public write and the value data)
+Permissions, ttl and encoding are set automatically, teh other parameters must be provided by the users (as key-value).</p>
+<p>To modify more then a value, simply execute the method with different parameters. The modify operation will be appended to the file.</p>
+<div class="section" id="example">
+<h4>Example:<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h4>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">modify_handle_value</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span> <span class="s1">&#39;123/abc&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span> <span class="s1">&#39;URL&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span> <span class="s1">&#39;www.example.com&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This changes the value of type ‘URL’, which has index 1 corresponding to Handle ‘123/abc’.</p>
+</div>
+</div>
+<div class="section" id="adding-handle-values">
+<h3>Adding Handle values<a class="headerlink" href="#adding-handle-values" title="Permalink to this headline">¶</a></h3>
+<p>Use the method <a class="reference internal" href="#pyhandle.client.batchhandleclient.BatchHandleClient.add_handle_value" title="pyhandle.client.batchhandleclient.BatchHandleClient.add_handle_value"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_handle_value()</span></code></a> to add a new value to existing Handle.
+The first line is ADD + space + handle_name.</p>
+<p>The next lines are Handle values lines. There must be a handle value line to define the administrator of the handle. Each handle value line must start with an index followed by the handle value type, ttl, permissions and the value data.
+The method can be executed several times with different values to add more Handle values.</p>
+<div class="section" id="id1">
+<h4>Example:<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">handle</span> <span class="o">=</span> <span class="s1">&#39;123/abc&#39;</span>
+<span class="n">client</span><span class="o">.</span><span class="n">add_handle_value</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;URL&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="s1">&#39;www.example.com&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Adds a value of type ‘URL’ at index 1 to Handle ‘123/abc’</p>
+</div>
+</div>
+<div class="section" id="deleting-handle-values">
+<h3>Deleting Handle values<a class="headerlink" href="#deleting-handle-values" title="Permalink to this headline">¶</a></h3>
+<p>With the method <a class="reference internal" href="#pyhandle.client.batchhandleclient.BatchHandleClient.delete_handle_value" title="pyhandle.client.batchhandleclient.BatchHandleClient.delete_handle_value"><code class="xref py py-meth docutils literal notranslate"><span class="pre">delete_handle_value()</span></code></a> it is possible to delete one or more Handle values from an existing Handle.
+Required are: The Handle name and the indexes as a list.</p>
+<div class="section" id="id2">
+<h4>Example:<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">handle</span> <span class="o">=</span> <span class="s1">&#39;123/abc&#39;</span>
+<span class="n">indexes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">client</span><span class="o">.</span><span class="n">delete_handle_value</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">indexes</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This deletes Handle values at the index 2 and 3 of Handle ‘123/abc’.</p>
+</div>
+</div>
+<div class="section" id="executing-the-batch-file">
+<h3>Executing the batch file<a class="headerlink" href="#executing-the-batch-file" title="Permalink to this headline">¶</a></h3>
+<p>After finishing writing batch operations, the <em>GenericBatch</em> command utility is used to perform the operations.</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">bin</span><span class="o">/</span><span class="n">hdl</span><span class="o">-</span><span class="n">genericbatch</span> <span class="o">&lt;</span><span class="n">batchfile</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">LogFile</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">verbose</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="full-method-documentation">
+<h2>Full method documentation<a class="headerlink" href="#full-method-documentation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="constructors">
+<h3>Constructors<a class="headerlink" href="#constructors" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="pyhandle.client.batchhandleclient.BatchHandleClient.__init__">
+<code class="descclassname">BatchHandleClient.</code><code class="descname">__init__</code><span class="sig-paren">(</span><em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/batchhandleclient.html#BatchHandleClient.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.batchhandleclient.BatchHandleClient.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the batch client and set the path for the batch file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>credentials</strong> – Optional. As json file in form {“user”:”user”, “password”:”password”}</li>
+<li><strong>args</strong> – Optional. This includes different parameters concerning the batch file, such as the PATH.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="batch-file-methods">
+<h2>Batch file methods<a class="headerlink" href="#batch-file-methods" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pyhandle.client.batchhandleclient.BatchHandleClient.create_batch_file">
+<code class="descclassname">BatchHandleClient.</code><code class="descname">create_batch_file</code><span class="sig-paren">(</span><em>overwrite=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/batchhandleclient.html#BatchHandleClient.create_batch_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.batchhandleclient.BatchHandleClient.create_batch_file" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Creates a batch file in a directory specified by the user or in the default directory</dt>
+<dd>(./pyhandle/batch/handle_batch).</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>overwrite</strong> – Optional. If set to True, the existing batch file
+will be overwritten. Defaults to False.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#pyhandle.batchhsexceptions.BatchFileExistsException" title="pyhandle.batchhsexceptions.BatchFileExistsException"><code class="xref py py-exc docutils literal notranslate"><span class="pre">BatchFileExistsException</span></code></a> Only if overwrite is not set or
+set to False.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.batchhandleclient.BatchHandleClient.register_handle_batch">
+<code class="descclassname">BatchHandleClient.</code><code class="descname">register_handle_batch</code><span class="sig-paren">(</span><em>handle</em>, <em>location</em>, <em>hdl_admin_index</em>, <em>admin_handle</em>, <em>perm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/batchhandleclient.html#BatchHandleClient.register_handle_batch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.batchhandleclient.BatchHandleClient.register_handle_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method creates a simple Handle record including a Handle value to define the administrator of the Handle
+and the value for the location (URL)..
+Operation name is ‘CREATE’. The first line is composed of the following:</p>
+<blockquote>
+<div>CREATE + space + handle_name.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>handle</strong> – The full name of the handle to be registered (prefix
+and suffix)</li>
+<li><strong>location</strong> – The URL of the data entity to be referenced</li>
+<li><strong>hdl_admin_index</strong> – Unique index number</li>
+<li><strong>admin_handle</strong> – Administrator of the Handle</li>
+<li><strong>perm</strong> – permissions</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pyhandle.batchhsexceptions.BatchFileExistsException" title="pyhandle.batchhsexceptions.BatchFileExistsException"><code class="xref py py-exc docutils literal notranslate"><span class="pre">BatchFileExistsException</span></code></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.batchhandleclient.BatchHandleClient.delete_handle">
+<code class="descclassname">BatchHandleClient.</code><code class="descname">delete_handle</code><span class="sig-paren">(</span><em>handle</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/batchhandleclient.html#BatchHandleClient.delete_handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.batchhandleclient.BatchHandleClient.delete_handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method deletes an existing Handle and its records.
+Operation name ‘DELETE’.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>handle</strong> – Handle name to be deleted</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#pyhandle.batchhsexceptions.BatchFileExistsException" title="pyhandle.batchhsexceptions.BatchFileExistsException"><code class="xref py py-exc docutils literal notranslate"><span class="pre">BatchFileExistsException</span></code></a>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.batchhandleclient.BatchHandleClient.modify_handle_value">
+<code class="descclassname">BatchHandleClient.</code><code class="descname">modify_handle_value</code><span class="sig-paren">(</span><em>handle</em>, <em>**kvpairs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/batchhandleclient.html#BatchHandleClient.modify_handle_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.batchhandleclient.BatchHandleClient.modify_handle_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method changes Handle values for an existing Handle.
+Operation name ‘MODIFY’</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>handle</strong> – Handle whose record is to be modified</li>
+<li><strong>kvpairs</strong> – Contains the unique index number, Handle value type and the value data</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pyhandle.batchhsexceptions.BatchFileExistsException" title="pyhandle.batchhsexceptions.BatchFileExistsException"><code class="xref py py-exc docutils literal notranslate"><span class="pre">BatchFileExistsException</span></code></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.batchhandleclient.BatchHandleClient.add_handle_value">
+<code class="descclassname">BatchHandleClient.</code><code class="descname">add_handle_value</code><span class="sig-paren">(</span><em>handle</em>, <em>**kvpairs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/batchhandleclient.html#BatchHandleClient.add_handle_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.batchhandleclient.BatchHandleClient.add_handle_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>The method adds new handle values to an existing handle.
+Operation name ‘ADD’.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>handle</strong> – The handle where the new value will be added</li>
+<li><strong>kvpairs</strong> – Contains the unique index number, Handle value type and the value data</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pyhandle.batchhsexceptions.BatchFileExistsException" title="pyhandle.batchhsexceptions.BatchFileExistsException"><code class="xref py py-exc docutils literal notranslate"><span class="pre">BatchFileExistsException</span></code></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.batchhandleclient.BatchHandleClient.delete_handle_value">
+<code class="descclassname">BatchHandleClient.</code><code class="descname">delete_handle_value</code><span class="sig-paren">(</span><em>handle</em>, <em>value_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/batchhandleclient.html#BatchHandleClient.delete_handle_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.batchhandleclient.BatchHandleClient.delete_handle_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method removes one or more handle values from an existing handle.
+Operation name ‘REMOVE’.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>handle</strong> – Handle from whose record the entry should be deleted.</li>
+<li><strong>value_index</strong> – The index of the value</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pyhandle.batchhsexceptions.BatchFileExistsException" title="pyhandle.batchhsexceptions.BatchFileExistsException"><code class="xref py py-exc docutils literal notranslate"><span class="pre">BatchFileExistsException</span></code></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.batchhandleclient.BatchHandleClient.authenticate_seckey">
+<code class="descclassname">BatchHandleClient.</code><code class="descname">authenticate_seckey</code><span class="sig-paren">(</span><em>user</em>, <em>password</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/batchhandleclient.html#BatchHandleClient.authenticate_seckey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.batchhandleclient.BatchHandleClient.authenticate_seckey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Secret key authentication. Operation name ‘AUTHENTICATE’.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user</strong> – This must be a handle value reference in the format
+“index:prefix/suffix”.</li>
+<li><strong>password</strong> – This is the password stored as secret key in the
+actual Handle value the username points to.</li>
+<li><strong>credentials</strong> – Optional. When credentials are</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pyhandle.batchhsexceptions.BatchFileExistsException" title="pyhandle.batchhsexceptions.BatchFileExistsException"><code class="xref py py-exc docutils literal notranslate"><span class="pre">BatchFileExistsException</span></code></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.batchhandleclient.BatchHandleClient.authenticate_pubkey">
+<code class="descclassname">BatchHandleClient.</code><code class="descname">authenticate_pubkey</code><span class="sig-paren">(</span><em>user</em>, <em>priv_key_path</em>, <em>passphrase=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/batchhandleclient.html#BatchHandleClient.authenticate_pubkey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.batchhandleclient.BatchHandleClient.authenticate_pubkey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Private key authentication. Operation name ‘AUTHENTICATE’.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user</strong> – admin_index:admin_handle</li>
+<li><strong>pubkey_path</strong> – private_key_file_path</li>
+<li><strong>passphrase</strong> – If your private key was created and encrypted by passphrase</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pyhandle.batchhsexceptions.BatchFileExistsException" title="pyhandle.batchhsexceptions.BatchFileExistsException"><code class="xref py py-exc docutils literal notranslate"><span class="pre">BatchFileExistsException</span></code></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.batchhandleclient.BatchHandleClient.authenticate_with_credentials">
+<code class="descclassname">BatchHandleClient.</code><code class="descname">authenticate_with_credentials</code><span class="sig-paren">(</span><em>credentials</em>, <em>auth_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/batchhandleclient.html#BatchHandleClient.authenticate_with_credentials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.batchhandleclient.BatchHandleClient.authenticate_with_credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the credentials for seckey and pubkey authentication.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>credentials</strong> – A credentials object, see separate class
+PIDClientCredentials.</li>
+<li><strong>auth_type</strong> – Set authentication type to ‘seckey’ (username:password)
+or to pubkey (privatekey | passphrase).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="helper-methods">
+<h2>Helper methods<a class="headerlink" href="#helper-methods" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pyhandle.client.batchhandleclient.BatchHandleClient.get_all_args">
+<code class="descclassname">BatchHandleClient.</code><code class="descname">get_all_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/batchhandleclient.html#BatchHandleClient.get_all_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.batchhandleclient.BatchHandleClient.get_all_args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.batchhandleclient.BatchHandleClient.get_batch_file_path">
+<code class="descclassname">BatchHandleClient.</code><code class="descname">get_batch_file_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/batchhandleclient.html#BatchHandleClient.get_batch_file_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.batchhandleclient.BatchHandleClient.get_batch_file_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.batchhandleclient.BatchHandleClient.check_if_file_exists">
+<code class="descclassname">BatchHandleClient.</code><code class="descname">check_if_file_exists</code><span class="sig-paren">(</span><em>file_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/batchhandleclient.html#BatchHandleClient.check_if_file_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.batchhandleclient.BatchHandleClient.check_if_file_exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-pyhandle.batchhsexceptions">
+<span id="exceptions"></span><h2>Exceptions<a class="headerlink" href="#module-pyhandle.batchhsexceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="pyhandle.batchhsexceptions.BatchFileExistsException">
+<em class="property">exception </em><code class="descclassname">pyhandle.batchhsexceptions.</code><code class="descname">BatchFileExistsException</code><span class="sig-paren">(</span><em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/batchhsexceptions.html#BatchFileExistsException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.batchhsexceptions.BatchFileExistsException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises when batch files does not exists</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyhandleclientdb.html" title="DB Handle Client"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyHandle 1.0.3 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2017, Deutsches Klimarechenzentrum GmbH, GRNET S.A., SURFsara.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+    </div>
+  </body>
+</html>

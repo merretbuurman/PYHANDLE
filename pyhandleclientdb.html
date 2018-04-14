@@ -1,0 +1,565 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>DB Handle Client &#8212; PyHandle 1.0.3 documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="BATCH Handle Client" href="pyhandleclientbatch.html" />
+    <link rel="prev" title="REST Handle Client" href="pyhandleclientrest.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyhandleclientbatch.html" title="BATCH Handle Client"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pyhandleclientrest.html" title="REST Handle Client"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyHandle 1.0.3 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">DB Handle Client</a><ul>
+<li><a class="reference internal" href="#instantiation">Instantiation</a></li>
+<li><a class="reference internal" href="#basic-handle-interaction">Basic Handle interaction</a></li>
+<li><a class="reference internal" href="#registering-new-handles-hs-admin">Registering new Handles (HS_ADMIN)</a><ul>
+<li><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#full-method-documentation">Full method documentation</a><ul>
+<li><a class="reference internal" href="#constructors">Constructors</a></li>
+<li><a class="reference internal" href="#handle-record-methods">Handle record methods</a></li>
+<li><a class="reference internal" href="#helper-methods">Helper methods</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-pyhandle.dbhsexceptions">Exceptions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="pyhandleclientrest.html"
+                        title="previous chapter">REST Handle Client</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="pyhandleclientbatch.html"
+                        title="next chapter">BATCH Handle Client</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/pyhandleclientdb.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="db-handle-client">
+<h1>DB Handle Client<a class="headerlink" href="#db-handle-client" title="Permalink to this headline">¶</a></h1>
+<p>The DB Handle client provides methods to create, update and delete Handles directly via the (SQL) database of the
+Handle System server.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The current version of the library supports MySQL database.</p>
+</div>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">The DB client does not provide a read-only mode. All operations require authentication.</p>
+</div>
+<div class="section" id="instantiation">
+<h2>Instantiation<a class="headerlink" href="#instantiation" title="Permalink to this headline">¶</a></h2>
+<p>As described in the <a class="reference internal" href="pyhandleclient.html"><span class="doc">PyHandleClient</span></a>, credentials and information about the database server are required in
+order to instantiate the DB client.</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyhandle.handleclient</span> <span class="k">import</span> <span class="n">PyHandleClient</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">PyHandleClient</span><span class="p">(</span><span class="s1">&#39;db&#39;</span><span class="p">,</span> <span class="n">credentials</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The credentials can loaded from a file or passed as a dictionary to the PyHandleClient</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">credentials</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;db_host&#39;</span><span class="p">:</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;db_user&#39;</span><span class="p">:</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;db_pass&#39;</span><span class="p">:</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;db_name&#39;</span><span class="p">:</span><span class="s1">&#39;&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Credentials can be also loaded from a json file using the PIDClientCredentials class as follows:</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cred</span> <span class="o">=</span> <span class="n">PIDClientCredentials</span><span class="o">.</span><span class="n">load_from_JSON</span><span class="p">(</span><span class="s1">&#39;my_credentials.json&#39;</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">PyHandleClient</span><span class="p">(</span><span class="s1">&#39;db&#39;</span><span class="p">,</span> <span class="n">cred</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The JSON file should look like this:</p>
+<blockquote>
+<div><div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;client&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;db_host&quot;</span><span class="p">:</span> <span class="s2">&quot;https://handle.server&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;db_user&quot;</span><span class="p">:</span> <span class="s2">&quot;db_user&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;db_password&quot;</span><span class="p">:</span> <span class="s2">&quot;db_password&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;db_name&quot;</span><span class="p">:</span> <span class="s2">&quot;db_name&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Then the client’s methods can be used to read, create, modify or delete Handles</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">value</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">some_methods</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="basic-handle-interaction">
+<h2>Basic Handle interaction<a class="headerlink" href="#basic-handle-interaction" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Creating a Handle</dt>
+<dd><dl class="first last docutils">
+<dt>Use <a class="reference internal" href="#pyhandle.client.dbhandleclient.DBHandleClient.register_handle" title="pyhandle.client.dbhandleclient.DBHandleClient.register_handle"><code class="xref py py-meth docutils literal notranslate"><span class="pre">register_handle()</span></code></a> to create a Handle with a custom name</dt>
+<dd>or <a class="reference internal" href="#pyhandle.client.dbhandleclient.DBHandleClient.generate_and_register_handle" title="pyhandle.client.dbhandleclient.DBHandleClient.generate_and_register_handle"><code class="xref py py-meth docutils literal notranslate"><span class="pre">generate_and_register_handle()</span></code></a> to create a Handle with a random UUID-based name.</dd>
+</dl>
+</dd>
+<dt>Deleting a Handle</dt>
+<dd>Use <a class="reference internal" href="#pyhandle.client.dbhandleclient.DBHandleClient.delete_handle" title="pyhandle.client.dbhandleclient.DBHandleClient.delete_handle"><code class="xref py py-meth docutils literal notranslate"><span class="pre">delete_handle()</span></code></a>.</dd>
+<dt>Retrieving a full Handle record</dt>
+<dd>This can be done by <a class="reference internal" href="#pyhandle.client.dbhandleclient.DBHandleClient.retrieve_handle_record" title="pyhandle.client.dbhandleclient.DBHandleClient.retrieve_handle_record"><code class="xref py py-meth docutils literal notranslate"><span class="pre">retrieve_handle_record()</span></code></a>.</dd>
+<dt>Retrieving a single value</dt>
+<dd>Use <a class="reference internal" href="#pyhandle.client.dbhandleclient.DBHandleClient.get_value_from_handle" title="pyhandle.client.dbhandleclient.DBHandleClient.get_value_from_handle"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_value_from_handle()</span></code></a> to retrieve a single Handle record
+value.</dd>
+<dt>Modifying a Handle record</dt>
+<dd>Use <a class="reference internal" href="#pyhandle.client.dbhandleclient.DBHandleClient.modify_handle_value" title="pyhandle.client.dbhandleclient.DBHandleClient.modify_handle_value"><code class="xref py py-meth docutils literal notranslate"><span class="pre">modify_handle_value()</span></code></a> to modify any number of values in a
+specific Handle record. To remove individual values, use <a class="reference internal" href="#pyhandle.client.dbhandleclient.DBHandleClient.delete_handle_value" title="pyhandle.client.dbhandleclient.DBHandleClient.delete_handle_value"><code class="xref py py-meth docutils literal notranslate"><span class="pre">delete_handle_value()</span></code></a>.</dd>
+<dt>Searching for a Handle</dt>
+<dd>Use <a class="reference internal" href="#pyhandle.client.dbhandleclient.DBHandleClient.search_handle" title="pyhandle.client.dbhandleclient.DBHandleClient.search_handle"><code class="xref py py-meth docutils literal notranslate"><span class="pre">search_handle()</span></code></a> to search for Handles with a specific key and
+value. For multiple key-value search use <a class="reference internal" href="#pyhandle.client.dbhandleclient.DBHandleClient.search_handle_multiple_keys" title="pyhandle.client.dbhandleclient.DBHandleClient.search_handle_multiple_keys"><code class="xref py py-meth docutils literal notranslate"><span class="pre">search_handle_multiple_keys()</span></code></a></dd>
+</dl>
+</div>
+<div class="section" id="registering-new-handles-hs-admin">
+<h2>Registering new Handles (HS_ADMIN)<a class="headerlink" href="#registering-new-handles-hs-admin" title="Permalink to this headline">¶</a></h2>
+<p>An administrator Handle (HS_ADMIN entry) is automatically added to the created Handle.
+It contains the name of the admin Handle, the index and the permissions.
+These values must be passed as parameters to <a class="reference internal" href="#pyhandle.client.dbhandleclient.DBHandleClient.register_handle" title="pyhandle.client.dbhandleclient.DBHandleClient.register_handle"><code class="xref py py-meth docutils literal notranslate"><span class="pre">register_handle()</span></code></a></p>
+<div class="section" id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<p>To create the Handle 123/NEW_HANDLE, which has 123/admin as admin Handle, the following parameters need to be provided:</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;HS_ADMIN&#39;</span><span class="p">:</span> <span class="s2">&quot;{&#39;index&#39;: 200, &#39;handle&#39;: &#39;123/admin&#39;, &#39;permissions&#39;: &#39;011111110011&#39;}&quot;</span>
+</pre></div>
+</div>
+<p>Then the method <a class="reference internal" href="#pyhandle.client.dbhandleclient.DBHandleClient.register_handle" title="pyhandle.client.dbhandleclient.DBHandleClient.register_handle"><code class="xref py py-meth docutils literal notranslate"><span class="pre">register_handle()</span></code></a> is called as follows</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">register_handle</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">admin_handle</span><span class="o">=</span><span class="s1">&#39;123/admin&#39;</span><span class="p">,</span> <span class="n">admin_handle_index</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">permissions</span><span class="o">=</span><span class="s1">&#39;011111110011&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The sequence of the permissions should be respected and is in form: <strong>(create hdl, delete hdl, create derived prefix, delete derived prefix, read val, modify val, del val, add val,
+moodify admin, del, admin, add admin, list)</strong></p>
+</div>
+</div>
+</div>
+<div class="section" id="full-method-documentation">
+<h2>Full method documentation<a class="headerlink" href="#full-method-documentation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="constructors">
+<h3>Constructors<a class="headerlink" href="#constructors" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="pyhandle.client.dbhandleclient.DBHandleClient.__init__">
+<code class="descclassname">DBHandleClient.</code><code class="descname">__init__</code><span class="sig-paren">(</span><em>credentials</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/dbhandleclient.html#DBHandleClient.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.dbhandleclient.DBHandleClient.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the DB client. Instantiate a connection object and connect to the HS database</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>db_host</strong> – host where the handle server database is located</li>
+<li><strong>db_user</strong> – username to log in as</li>
+<li><strong>db_password</strong> – password for db_user</li>
+<li><strong>db_name</strong> – database name</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="handle-record-methods">
+<h3>Handle record methods<a class="headerlink" href="#handle-record-methods" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="pyhandle.client.dbhandleclient.DBHandleClient.register_handle">
+<code class="descclassname">DBHandleClient.</code><code class="descname">register_handle</code><span class="sig-paren">(</span><em>handle</em>, <em>url</em>, <em>overwrite=False</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/dbhandleclient.html#DBHandleClient.register_handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.dbhandleclient.DBHandleClient.register_handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a new Handle with given name. If the handle already exists
+and overwrite is not set to True, the method will throw an
+exception.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>handle</strong> – The full name of the handle to be registered (prefix
+and suffix)</li>
+<li><strong>url</strong> – The URL of the data entity to be referenced</li>
+<li><strong>overwrite</strong> – Optional. If set to True, an existing handle record
+will be overwritten. Defaults to False.</li>
+<li><strong>args</strong> – <p>Mandatory key_value parameters for the admin of the Handle being created.
+Example:</p>
+<blockquote>
+<div>admin_handle = ‘prefix/suffix’.<p>admin_handle_index = 200.</p>
+<p>perm = ‘111111111111’</p>
+</div></blockquote>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="pyhandleclientrest.html#pyhandle.handleexceptions.HandleAlreadyExistsException" title="pyhandle.handleexceptions.HandleAlreadyExistsException"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HandleAlreadyExistsException</span></code></a> Only if overwrite is not set or
+set to False.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.dbhandleclient.DBHandleClient.generate_and_register_handle">
+<code class="descclassname">DBHandleClient.</code><code class="descname">generate_and_register_handle</code><span class="sig-paren">(</span><em>prefix</em>, <em>location</em>, <em>checksum=None</em>, <em>**extratypes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/dbhandleclient.html#DBHandleClient.generate_and_register_handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.dbhandleclient.DBHandleClient.generate_and_register_handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a new Handle with a unique random name (random UUID).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>prefix</strong> – The prefix of the handle to be registered. The method
+will generate a suffix.</li>
+<li><strong>location</strong> – The URL of the data entity to be referenced.</li>
+<li><strong>checksum</strong> – Optional. The checksum string.</li>
+<li><strong>extratypes</strong> – Optional. Additional key value pairs as dict.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The new handle name.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.dbhandleclient.DBHandleClient.delete_handle">
+<code class="descclassname">DBHandleClient.</code><code class="descname">delete_handle</code><span class="sig-paren">(</span><em>handle</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/dbhandleclient.html#DBHandleClient.delete_handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.dbhandleclient.DBHandleClient.delete_handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete handle and its handle record.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>handle</strong> – Handle being deleted</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#pyhandle.dbhsexceptions.DBHandleNotFoundException" title="pyhandle.dbhsexceptions.DBHandleNotFoundException"><code class="xref py py-exc docutils literal notranslate"><span class="pre">DBHandleNotFoundException</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.dbhandleclient.DBHandleClient.retrieve_handle_record">
+<code class="descclassname">DBHandleClient.</code><code class="descname">retrieve_handle_record</code><span class="sig-paren">(</span><em>handle</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/dbhandleclient.html#DBHandleClient.retrieve_handle_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.dbhandleclient.DBHandleClient.retrieve_handle_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve all Handle record values including HS_ADMIN
+Extract HS_ADMIN value from the query result and converts it to Hex.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>handle</strong> – The handle from which the values are retrieved.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">handle_records: All values of the Handle including HS_ADMIN.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.dbhandleclient.DBHandleClient.get_value_from_handle">
+<code class="descclassname">DBHandleClient.</code><code class="descname">get_value_from_handle</code><span class="sig-paren">(</span><em>handle</em>, <em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/dbhandleclient.html#DBHandleClient.get_value_from_handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.dbhandleclient.DBHandleClient.get_value_from_handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a single value from a single handle.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>handle</strong> – The handle to take the value from.</li>
+<li><strong>key</strong> – The key.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><a class="reference internal" href="#pyhandle.dbhsexceptions.DBHandleNotFoundException" title="pyhandle.dbhsexceptions.DBHandleNotFoundException"><code class="xref py py-exc docutils literal notranslate"><span class="pre">DBHandleNotFoundException</span></code></a></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><a class="reference internal" href="#pyhandle.dbhsexceptions.DBHandleKeyNotFoundException" title="pyhandle.dbhsexceptions.DBHandleKeyNotFoundException"><code class="xref py py-exc docutils literal notranslate"><span class="pre">DBHandleKeyNotFoundException</span></code></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A string containing the value.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.dbhandleclient.DBHandleClient.modify_handle_value">
+<code class="descclassname">DBHandleClient.</code><code class="descname">modify_handle_value</code><span class="sig-paren">(</span><em>handle</em>, <em>ttl=None</em>, <em>add_if_not_exists=True</em>, <em>**kvpairs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/dbhandleclient.html#DBHandleClient.modify_handle_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.dbhandleclient.DBHandleClient.modify_handle_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>This statement is used to update a single handle value with new values. The value to
+update is identified by the handle and index.
+Modify entries (key-value pairs).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>handle</strong> – Handle whose record is to be modified</li>
+<li><strong>ttl</strong> – Optional. Integer value. If ttl should be set to a
+non-default value.</li>
+<li><strong>kvpairs</strong> – The user can specify several key-value-pairs.
+These will be the handle value types and values that will be
+modified. The keys are the names or the handle value types (e.g.
+“URL”). The values are the new values to store in “data”.</li>
+<li><strong>add_if_not_exists</strong> – Optional.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pyhandle.dbhsexceptions.DBHandleNotFoundException" title="pyhandle.dbhsexceptions.DBHandleNotFoundException"><code class="xref py py-exc docutils literal notranslate"><span class="pre">DBHandleNotFoundException</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.dbhandleclient.DBHandleClient.delete_handle_value">
+<code class="descclassname">DBHandleClient.</code><code class="descname">delete_handle_value</code><span class="sig-paren">(</span><em>handle</em>, <em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/dbhandleclient.html#DBHandleClient.delete_handle_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.dbhandleclient.DBHandleClient.delete_handle_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a key-value pair from a handle record. If the key exists more
+than once, all key-value pairs with this key are deleted.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>handle</strong> – Handle from whose record the entry should be deleted.</li>
+<li><strong>key</strong> – Key to be deleted. Also accepts a list of keys.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.dbhandleclient.DBHandleClient.search_handle">
+<code class="descclassname">DBHandleClient.</code><code class="descname">search_handle</code><span class="sig-paren">(</span><em>pattern=None</em>, <em>limit=None</em>, <em>offset=None</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/dbhandleclient.html#DBHandleClient.search_handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.dbhandleclient.DBHandleClient.search_handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for handles containing the specified key with the specified
+value (one key-value). The number of record can be controlled by limit and offset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pattern</strong> – Optional. This value can be set to do search depending on the handle name.</li>
+<li><strong>limit</strong> – Optional. Limit the number of results returned in a SQL statement.</li>
+<li><strong>offset</strong> – Optional. Page number, first row to return. Initial raw is 0.</li>
+<li><strong>args</strong> – e.g URL=’www.example.com’</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A list of all Handles (list of strings) that bear the given key with
+given value of given prefix or server. The list may be empty and
+may also contain more than one element.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.dbhandleclient.DBHandleClient.list_all_handles">
+<code class="descclassname">DBHandleClient.</code><code class="descname">list_all_handles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/dbhandleclient.html#DBHandleClient.list_all_handles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.dbhandleclient.DBHandleClient.list_all_handles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of all of the handles in the database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of all handles in the table</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhandle.client.dbhandleclient.DBHandleClient.search_handle_multiple_keys">
+<code class="descclassname">DBHandleClient.</code><code class="descname">search_handle_multiple_keys</code><span class="sig-paren">(</span><em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/dbhandleclient.html#DBHandleClient.search_handle_multiple_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.dbhandleclient.DBHandleClient.search_handle_multiple_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for handles containing the specified key(s) with the specified
+value(s).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args</strong> – Several search fields and values can
+be specified as key-value-pairs,
+e.g. CHECKSUM=123456, URL=www.foo.com</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of all Handles (list of strings) that bear the given key with
+given value of given prefix or server. The list may be empty and
+may also contain more than one element.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="helper-methods">
+<h3>Helper methods<a class="headerlink" href="#helper-methods" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="pyhandle.client.dbhandleclient.DBHandleClient.get_list_of_idx">
+<code class="descclassname">DBHandleClient.</code><code class="descname">get_list_of_idx</code><span class="sig-paren">(</span><em>handle</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/dbhandleclient.html#DBHandleClient.get_list_of_idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.dbhandleclient.DBHandleClient.get_list_of_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a list of indices already used.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>handle</strong> – the handle to extract the indexes from.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list_idx: List of indices</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="pyhandle.client.dbhandleclient.DBHandleClient.connection_status">
+<em class="property">static </em><code class="descclassname">DBHandleClient.</code><code class="descname">connection_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/dbhandleclient.html#DBHandleClient.connection_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.dbhandleclient.DBHandleClient.connection_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether a connection to DB is open.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>handle_db_connection</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if connection is open</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="pyhandle.client.dbhandleclient.DBHandleClient.create_list_of_queries">
+<em class="property">static </em><code class="descclassname">DBHandleClient.</code><code class="descname">create_list_of_queries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/client/dbhandleclient.html#DBHandleClient.create_list_of_queries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.client.dbhandleclient.DBHandleClient.create_list_of_queries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a list of queries, which will be executed in a specific order.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>query</strong> – The query to be added to the list.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of queries</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-pyhandle.dbhsexceptions">
+<span id="exceptions"></span><h2>Exceptions<a class="headerlink" href="#module-pyhandle.dbhsexceptions" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the exceptions that may occur in
+libraries interacting with the Handle System (Database).</p>
+<p>Author: Sofiane Bendoukha, DKRZ, 2016-2017</p>
+<dl class="exception">
+<dt id="pyhandle.dbhsexceptions.DBHandleAlreadyExistsException">
+<em class="property">exception </em><code class="descclassname">pyhandle.dbhsexceptions.</code><code class="descname">DBHandleAlreadyExistsException</code><span class="sig-paren">(</span><em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/dbhsexceptions.html#DBHandleAlreadyExistsException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.dbhsexceptions.DBHandleAlreadyExistsException" title="Permalink to this definition">¶</a></dt>
+<dd><p>To be raised if self.handle already exists.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="pyhandle.dbhsexceptions.DBHandleKeyNotFoundException">
+<em class="property">exception </em><code class="descclassname">pyhandle.dbhsexceptions.</code><code class="descname">DBHandleKeyNotFoundException</code><span class="sig-paren">(</span><em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/dbhsexceptions.html#DBHandleKeyNotFoundException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.dbhsexceptions.DBHandleKeyNotFoundException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises when handle key not found</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="pyhandle.dbhsexceptions.DBHandleKeyNotSpecifiedException">
+<em class="property">exception </em><code class="descclassname">pyhandle.dbhsexceptions.</code><code class="descname">DBHandleKeyNotSpecifiedException</code><span class="sig-paren">(</span><em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/dbhsexceptions.html#DBHandleKeyNotSpecifiedException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.dbhsexceptions.DBHandleKeyNotSpecifiedException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises when no search items has been provided</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="pyhandle.dbhsexceptions.DBHandleNoCredentialsError">
+<em class="property">exception </em><code class="descclassname">pyhandle.dbhsexceptions.</code><code class="descname">DBHandleNoCredentialsError</code><span class="sig-paren">(</span><em>msg=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/dbhsexceptions.html#DBHandleNoCredentialsError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.dbhsexceptions.DBHandleNoCredentialsError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises when insufficient credentials are given</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="pyhandle.dbhsexceptions.DBHandleNotFoundException">
+<em class="property">exception </em><code class="descclassname">pyhandle.dbhsexceptions.</code><code class="descname">DBHandleNotFoundException</code><span class="sig-paren">(</span><em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhandle/dbhsexceptions.html#DBHandleNotFoundException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhandle.dbhsexceptions.DBHandleNotFoundException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises when handle not found in database</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyhandleclientbatch.html" title="BATCH Handle Client"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="pyhandleclientrest.html" title="REST Handle Client"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyHandle 1.0.3 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2017, Deutsches Klimarechenzentrum GmbH, GRNET S.A., SURFsara.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+    </div>
+  </body>
+</html>
