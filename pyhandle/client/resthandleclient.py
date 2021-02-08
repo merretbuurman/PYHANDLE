@@ -661,9 +661,15 @@ class RESTHandleClient(HandleClient):
             extratypes = {}
 
         if not location is None:
+            if 'URL' in extratypes:
+                raise ValueError('Received two values for URL: %s and %s. Please remove one!' % 
+                    (location, extratypes['URL']))
             extratypes["URL"] = location
 
         if not checksum is None:
+            if 'CHECKSUM' in extratypes:
+                raise ValueError('Received two values for CHECKSUM: %s and %s. Please remove one!' % 
+                    (checksum, extratypes['CHECKSUM']))
             extratypes["CHECKSUM"] = checksum
 
         if additional_URLs is not None:

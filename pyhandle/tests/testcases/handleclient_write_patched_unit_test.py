@@ -104,6 +104,36 @@ class RESTHandleClientWriteaccessPatchedTestCase(unittest.TestCase):
     
     @mock.patch('pyhandle.handlesystemconnector.requests.Session.put')
     @mock.patch('pyhandle.handlesystemconnector.requests.Session.get')
+    def test_register_handle_redundant_values(self, getpatch, putpatch):
+        """Test registering a new handle with redundant types of values."""
+
+        # Define the replacement for the patched GET method:
+        # The handle does not exist yet, so a response with 404
+        mock_response_get = MockResponse(notfound=True)
+        getpatch.return_value = mock_response_get
+
+        # Define the replacement for the patched requests.put method:
+        mock_response_put = MockResponse(wascreated=True)
+        putpatch.return_value = mock_response_put
+
+        # Run the code to be tested:
+        testhandle = 'my/testhandle'
+        testlocation = 'http://foo.bar'
+        testchecksum = '123456'
+        additional_URLs = None
+
+        with self.assertRaises(ValueError):
+            handle_returned = self.inst.register_handle(testhandle,
+                                                    location=testlocation,
+                                                    checksum=testchecksum,
+                                                    additional_URLs=additional_URLs,
+                                                    FOO='foo',
+                                                    BAR='bar',
+                                                    URL='my-second-url')
+
+
+    @mock.patch('pyhandle.handlesystemconnector.requests.Session.put')
+    @mock.patch('pyhandle.handlesystemconnector.requests.Session.get')
     def test_register_handle_kv(self, getpatch, putpatch):
         """Test registering a new handle with various types of values."""
 
