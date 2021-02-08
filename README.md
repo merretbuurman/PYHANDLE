@@ -298,6 +298,22 @@ docker run -it --rm temp:temp
 
 # build fails:
 docker build -t eudat-pyhandle:py2.6 -f Dockerfile-python2.6 .
+```
+
+
+For coverage (in python 3):
+
+```
+pip install coverage
+coverage erase
+coverage run --include=pyhandle/* --branch -m pyhandle.tests.main_test_script
+coverage run --omit=pyhandle/tests/* --branch -m pyhandle.tests.main_test_script
+coverage html -i
+#tar cfvz htmlcov.tar htmlcov
+#tar xfvz htmlcov.tar 
+firefox htmlcov/index.html
+```
+Please note that the REST client has decent unit test coverage, while the other clients have much less test coverage.
 
 
 
