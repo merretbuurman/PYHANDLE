@@ -639,6 +639,12 @@ class RESTHandleClientWriteaccessPatchedTestCase(unittest.TestCase):
         putpatch.return_value = mock_response_put
 
         # Call the method to be tested: Modifying corrupted raises exception:
+        with self.assertRaises(PyhandleException):
+            self.inst.modify_handle_value('my/testhandle',
+                                          TEST4='new4',
+                                          TEST2='new2',
+                                          TEST3='new3')
+
         with self.assertRaises(BrokenHandleRecordException):
             self.inst.modify_handle_value('my/testhandle',
                                           TEST4='new4',
