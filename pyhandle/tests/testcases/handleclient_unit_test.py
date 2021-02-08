@@ -76,7 +76,8 @@ class RESTHandleClientNoaccessTestCase(unittest.TestCase):
     def test_check_handle_syntax_normal(self):
         """Test check handle syntax"""
         syntax_checked = check_handle_syntax("foo/bar")
-        self.assertTrue(syntax_checked)
+        #self.assertTrue(syntax_checked)
+        self.assertEquals(syntax_checked, "foo/bar")
 
     def test_check_handle_syntax_two_slashes(self):
         """Handle Syntax: No exception if too many slashes in handle."""
@@ -100,7 +101,7 @@ class RESTHandleClientNoaccessTestCase(unittest.TestCase):
     def test_check_handle_syntax_with_index(self):
         """Test check handle syntax with index."""
         syntax_checked = check_handle_syntax("300:foo/bar")
-        self.assertTrue(syntax_checked,
+        self.assertEquals(syntax_checked, "300:foo/bar",
                         'The syntax of the handle is not index:prefix/suffix.')
 
     def test_check_handle_syntax_none(self):
@@ -131,22 +132,22 @@ class RESTHandleClientNoaccessTestCase(unittest.TestCase):
     def test_remove_index_from_handle(self):
         handle_with_index = "300:foo/bar"
         syntax_checked = check_handle_syntax(handle_with_index)
-        self.assertTrue(syntax_checked,
+        self.assertEquals(syntax_checked, "300:foo/bar",
                         'Test precondition failed!')
         index, handle = remove_index_from_handle(handle_with_index)
         syntax_checked = check_handle_syntax(handle)
-        self.assertTrue(syntax_checked,
+        self.assertEquals(syntax_checked, "foo/bar",
                         'After removing the index, the syntax of the handle should ' + \
                         'be prefix/suffix.')
 
     def test_remove_index_noindex(self):
         handle_with_index = "foo/bar"
         syntax_checked = check_handle_syntax(handle_with_index)
-        self.assertTrue(syntax_checked,
+        self.assertEquals(syntax_checked, "foo/bar",
                         'Test precondition failed!')
         index, handle = remove_index_from_handle(handle_with_index)
         syntax_checked = check_handle_syntax(handle)
-        self.assertTrue(syntax_checked,
+        self.assertEquals(syntax_checked, "foo/bar",
                         'After removing the index, the syntax of the handle should ' + \
                         'be prefix/suffix.')
 

@@ -36,14 +36,23 @@ def check_handle_syntax(string):
     '''
     Checks the syntax of a handle without an index (are prefix
     and suffix there, are there too many slashes?).
+    In case a "hdl:"" is prepended, it is removed.
+    If the syntax is not ok, exceptions are raised.
 
     :string: The handle without index, as string prefix/suffix.
     :raise: :exc:`~pyhandle.handleexceptions.handleexceptions.HandleSyntaxError`
-    :return: True. If it's not ok, exceptions are raised.
+    :return: The handle string, possibly modified.
 
     '''
 
-    expected = 'prefix/suffix'
+    expected = 'prefix/suffix' # or 'hdl:prefix/suffix'
+
+    if string is not None and string.startswith('hdl:'):
+        string = string[4:]
+        # Caution: Handles may also be of the form "200:prefix/suffix",
+        # e.g. when there is an index prepended. But I guess there will
+        # never be "hdl:200:prefix/suffix" or "200:hdl:prefix/suffix", so
+        # I think we're ok.
 
     try:
         arr = string.split('/')
@@ -63,18 +72,20 @@ def check_handle_syntax(string):
         raise handleexceptions.HandleSyntaxError(msg=msg, handle=string, expected_syntax=expected)
 
     if ':' in string:
-        check_handle_syntax_with_index(string, base_already_checked=True)
+        string = check_handle_syntax_with_index(string, base_already_checked=True)
 
-    return True
+    return string
 
 def check_handle_syntax_with_index(string, base_already_checked=False):
     '''
     Checks the syntax of a handle with an index (is index there, is it an
     integer?), and of the handle itself.
+    In case a "hdl:"" is prepended, it is removed.
+    If the syntax is not ok, exceptions are raised.
 
     :string: The handle with index, as string index:prefix/suffix.
     :raise: :exc:`~pyhandle.handleexceptions.handleexceptions.HandleSyntaxError`
-    :return: True. If it's not ok, exceptions are raised.
+    :return: The handle string, possibly modified.
     '''
 
     expected = 'index:prefix/suffix'
@@ -96,8 +107,8 @@ def check_handle_syntax_with_index(string, base_already_checked=False):
         raise handleexceptions.HandleSyntaxError(msg=msg, handle=string, expected_syntax=expected)
 
     if not base_already_checked:
-        check_handle_syntax(string)
-    return True
+        string = check_handle_syntax(string)
+    return string
 
 def create_authentication_string(username, password):
     '''

@@ -261,7 +261,7 @@ class RESTHandleClient(HandleClient):
         '''
         LOGGER.debug('retrieve_handle_record_json...')
 
-        utilhandle.check_handle_syntax(handle)
+        handle = utilhandle.check_handle_syntax(handle)
         response = self.__send_handle_get_request(handle)
         response_content = decoded_response(response)
                     
@@ -579,7 +579,7 @@ class RESTHandleClient(HandleClient):
 
         LOGGER.debug('delete_handle...')
 
-        utilhandle.check_handle_syntax(handle)
+        handle = utilhandle.check_handle_syntax(handle)
 
         # Safety check. In old epic client, the method could be used for
         # deleting handle values (not entire handle) by specifying more
