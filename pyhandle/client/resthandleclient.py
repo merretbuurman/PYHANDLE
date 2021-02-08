@@ -1035,7 +1035,7 @@ class RESTHandleClient(HandleClient):
         # If the handle owner is specified, use it. Otherwise, use 200:0.NA/prefix
         # With the prefix taken from the handle that is being created, not from anywhere else.
         if handleowner is None:
-            adminindex = '200' # TODO Why string, not integer?
+            adminindex = 200 # TODO TEST!!!
             prefix = handle.split('/')[0]
             adminhandle = '0.NA/' + prefix
             # TODO: Why is adminindex string, not integer? When I retrieve from

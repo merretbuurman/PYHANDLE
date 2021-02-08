@@ -95,7 +95,7 @@ class RESTHandleClientWriteaccessPatchedTestCase(unittest.TestCase):
         # Compare with expected payload:
         #expected_payload = {"values": [{"index": 100, "type": "HS_ADMIN", "data": {"value": {"index": "200", "handle": "0.NA/my", "permissions": "011111110011"}, "format": "admin"}}, {"index": 1, "type": "URL", "data": "http://foo.bar"}, {"index": 2, "type": "CHECKSUM", "data": "123456"}, {"index": 3, "type": "FOO", "data": "foo"}, {"index": 4, "type": "BAR", "data": "bar"}, {"index": 5, "type": "10320/LOC", "data": "<locations><location href=\"http://bar.bar\" id=\"0\" /><location href=\"http://foo.foo\" id=\"1\" /></locations>"}]}
         #expected_payload = {"values": [{"index": 100, "type": "HS_ADMIN", "data": {"value": {"index": "200", "handle": "0.NA/my", "permissions": "011111110011"}, "format": "admin"}}, {"index": 1, "type": "URL", "data": "http://foo.bar"}, {"index": 2, "type": "CHECKSUM", "data": "123456"}, {"index": 3, "type": "FOO", "data": "foo"}, {"index": 4, "type": "BAR", "data": "bar"}]}
-        expected_payload = {"values": [{"index": 100, "type": "HS_ADMIN", "data": {"value": {"index": "200", "handle": "0.NA/my", "permissions": "011111110011"}, "format": "admin"}}, {"index": 1, "type": "URL", "data": "http://foo.bar"}, {"index": 4, "type": "CHECKSUM", "data": "123456"}, {"index": 2, "type": "FOO", "data": "foo"}, {"index": 3, "type": "BAR", "data": "bar"}]}
+        expected_payload = {"values": [{"index": 100, "type": "HS_ADMIN", "data": {"value": {"index": 200, "handle": "0.NA/my", "permissions": "011111110011"}, "format": "admin"}}, {"index": 1, "type": "URL", "data": "http://foo.bar"}, {"index": 4, "type": "CHECKSUM", "data": "123456"}, {"index": 2, "type": "FOO", "data": "foo"}, {"index": 3, "type": "BAR", "data": "bar"}]}
         replace_timestamps(expected_payload)
         self.assertIsNotNone(flattensort(passed_payload))
         self.assertIsNotNone(flattensort(expected_payload))
@@ -163,7 +163,7 @@ class RESTHandleClientWriteaccessPatchedTestCase(unittest.TestCase):
         passed_payload, _ = self.get_payload_headers_from_mockresponse(putpatch)
         
         # Compare with expected payload:
-        expected_payload = {"values": [{"index": 100, "type": "HS_ADMIN", "data": {"value": {"index": "200", "handle": "0.NA/my", "permissions": "011111110011"}, "format": "admin"}}, {"index": 1, "type": "URL", "data": "http://foo.bar"}, {"index": 2, "type": "CHECKSUM", "data": "123456"}, {"index": 3, "type": "FOO", "data": "foo"}, {"index": 4, "type": "BAR", "data": "bar"}]}
+        expected_payload = {"values": [{"index": 100, "type": "HS_ADMIN", "data": {"value": {"index": 200, "handle": "0.NA/my", "permissions": "011111110011"}, "format": "admin"}}, {"index": 1, "type": "URL", "data": "http://foo.bar"}, {"index": 2, "type": "CHECKSUM", "data": "123456"}, {"index": 3, "type": "FOO", "data": "foo"}, {"index": 4, "type": "BAR", "data": "bar"}]}
         #expected_payload = {"values": [{"index": 100, "type": "HS_ADMIN", "data": {"value": {"index": "200", "handle": "0.NA/my", "permissions": "011111110011"}, "format": "admin"}}, {"index": 1, "type": "URL", "data": "http://foo.bar"}, {"index": 4, "type": "CHECKSUM", "data": "123456"}, {"index": 2, "type": "FOO", "data": "foo"}, {"index": 3, "type": "BAR", "data": "bar"}]}
         replace_timestamps(expected_payload)
         self.assertIsNotNone(flattensort(passed_payload))
@@ -212,7 +212,7 @@ class RESTHandleClientWriteaccessPatchedTestCase(unittest.TestCase):
                 'type':'HS_ADMIN', 
                 'data': {
                     'value':{
-                        'index':'200', # TODO Why string and not int?
+                        'index': 200, # TEST TODO Why string and not int?
                         'handle':'0.NA/my',
                         'permissions':'011111110011'
                     },
@@ -432,7 +432,7 @@ class RESTHandleClientWriteaccessPatchedTestCase(unittest.TestCase):
         #expected_payload = {"values": [{"index": 100, "type": "HS_ADMIN", "data": {"value": {"index": "200", "handle": "0.NA/my", "permissions": "011111110011"}, "format": "admin"}}, {"index": 1, "type": "URL", "data": "http://foo.bar"}, {"index": 2, "type": "CHECKSUM", "data": "123456"}, {"index": 3, "type": "FOO", "data": "foo"}, {"index": 4, "type": "BAR", "data": "bar"}, {"index": 5, "type": "10320/LOC", "data": "<locations><location href=\"http://bar.bar\" id=\"0\" /><location href=\"http://foo.foo\" id=\"1\" /></locations>"}]}
         #expected_payload = {"values": [{"index": 100, "type": "HS_ADMIN", "data": {"value": {"index": "200", "handle": "0.NA/my", "permissions": "011111110011"}, "format": "admin"}}, {"index": 1, "type": "URL", "data": "http://foo.bar"}, {"index": 2, "type": "CHECKSUM", "data": "123456"}, {"index": 3, "type": "FOO", "data": "foo"}, {"index": 4, "type": "BAR", "data": "bar"}]}
         # Different indizes:
-        expected_payload = {"values": [{"index": 100, "type": "HS_ADMIN", "data": {"value": {"index": "200", "handle": "0.NA/my", "permissions": "011111110011"}, "format": "admin"}}, {"index": 1, "type": "URL", "data": "http://foo.bar"}, {"index": 4, "type": "CHECKSUM", "data": "123456"}, {"index": 2, "type": "FOO", "data": "foo"}, {"index": 3, "type": "BAR", "data": "bar"}]}
+        expected_payload = {"values": [{"index": 100, "type": "HS_ADMIN", "data": {"value": {"index": 200, "handle": "0.NA/my", "permissions": "011111110011"}, "format": "admin"}}, {"index": 1, "type": "URL", "data": "http://foo.bar"}, {"index": 4, "type": "CHECKSUM", "data": "123456"}, {"index": 2, "type": "FOO", "data": "foo"}, {"index": 3, "type": "BAR", "data": "bar"}]}
         replace_timestamps(expected_payload)
 
         # Visual comparison
@@ -480,7 +480,7 @@ class RESTHandleClientWriteaccessPatchedTestCase(unittest.TestCase):
         passed_payload, _ = self.get_payload_headers_from_mockresponse(putpatch)
 
         # Compare with expected payload:
-        expected_payload = {"values": [{"index": 100, "type": "HS_ADMIN", "data": {"value": {"index": "200", "handle": "0.NA/my", "permissions": "011111110011"}, "format": "admin"}}, {"index": 1, "type": "URL", "data": "http://foo.bar"}, {"index": 2, "type": "CHECKSUM", "data": "123456"}]}
+        expected_payload = {"values": [{"index": 100, "type": "HS_ADMIN", "data": {"value": {"index": 200, "handle": "0.NA/my", "permissions": "011111110011"}, "format": "admin"}}, {"index": 1, "type": "URL", "data": "http://foo.bar"}, {"index": 2, "type": "CHECKSUM", "data": "123456"}]}
         replace_timestamps(expected_payload)
         self.assertIsNotNone(flattensort(passed_payload))
         self.assertIsNotNone(flattensort(expected_payload))
