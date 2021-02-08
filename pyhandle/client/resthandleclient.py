@@ -852,13 +852,17 @@ class RESTHandleClient(HandleClient):
         iteration.
 
         :param key: The key (Handle Record type)
-        :param list_of_entries: A list of the existing entries in which to find
-            the indices.
+        :param list_of_entries: A json handle record, or a list of the existing
+            entries in which to find the indices.
         :return: A list of strings, the indices of the entries of type "key" in
             the given handle record.
         '''
 
         LOGGER.debug('get_handlerecord_indices_for_key...')
+
+        if not type(list_of_entries) == type([]):
+            if 'values' in list_of_entries.keys():
+                list_of_entries = list_of_entries['values']
 
         indices = []
         for entry in list_of_entries:
