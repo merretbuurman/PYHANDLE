@@ -27,13 +27,7 @@ The library is also available on PyPi and can be installed via pip:
 ```
 
 For more information on the methods offered by the library, please consult the [technical documentation](http://eudat-b2safe.github.io/PYHANDLE).
-# Building the documentation
 
-For more details about the library you can build the documention using [Sphinx](http://www.sphinx-doc.org), requiring at least version 1.3. Sphinx and can be installed via pip. To build HTML documentation locally, then run:
-
-```bash
-python setup.py build_sphinx
-```
 
 
 # Link to documentation
@@ -42,6 +36,15 @@ python setup.py build_sphinx
 Check out the documentation [here](https://eudat-b2safe.github.io/PYHANDLE/).
 
 (You can find the source in the GitHub repository at [/docs/source/index.rst](./docs/source/index.rst)!)
+
+## Building the documentation
+
+For more details about the library you can build the documention using [Sphinx](http://www.sphinx-doc.org), requiring at least version 1.3. Sphinx and can be installed via pip. To build HTML documentation locally, then run:
+
+```bash
+python setup.py build_sphinx
+```
+
 
 
 # License
@@ -93,13 +96,13 @@ today=`date +%m%d%Y`
 version="1.x.x" # pyhandle version, e.g. 1.0.4
 
 docker build -t temp_pyhandle:36_$version_$today -f pyhandle/tests/testdockers/Dockerfile36 . 
-docker run  -it temp_pyhandle:36_$version_$today python setup.py test
+docker run  -it --rm temp_pyhandle:36_$version_$today python setup.py test
 
 docker build -t temp_pyhandle:37_$version_$today -f pyhandle/tests/testdockers/Dockerfile37 . 
-docker run  -it temp_pyhandle:37_$version_$today python setup.py test
+docker run  -it --rm temp_pyhandle:37_$version_$today python setup.py test
 
 docker build -t temp_pyhandle:38_$version_$today -f pyhandle/tests/testdockers/Dockerfile38 . 
-docker run  -it temp_pyhandle:38_$version_$today python setup.py test
+docker run  -it --rm temp_pyhandle:38_$version_$today python setup.py test
 ```
 
 There are also Dockerfiles in [./pyhandle/tests/testdockers](./pyhandle/tests/testdockers), but they are not documented and fail.
@@ -111,7 +114,7 @@ There are also Dockerfiles in [./pyhandle/tests/testdockers](./pyhandle/tests/te
 docker build -t eudat-pyhandle:py3.5 -f Dockerfile-py3.5 .
 cd ./pyhandle/tests
 docker build -t temp:temp -f Dockerfile-py3.5 .
-docker run -it temp:temp
+docker run -it --rm temp:temp
 
 # build fails:
 docker build -t eudat-pyhandle:py2.6 -f Dockerfile-python2.6 .
