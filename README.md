@@ -79,6 +79,186 @@ Copyright 2015-2021, Deutsches Klimarechenzentrum GmbH, GRNET S.A., SURFsara
 * `generate_and_register_handle(prefix, ...)` is a similar legacy method. Instead, just use `generate_PID_name(prefix)` to create a handle name and use one of the above. 
 
 
+
+## JSON formats: Retrieval
+
+You can retrieve handle records in three ways:
+
+1. `requests.get('http://hdl.handle.net/api/handles/prefix/suffix').json()`
+2. `pyclient.retrieve_handle_record_json('prefix/suffix')`
+3. `pyclient.retrieve_handle_record('prefix/suffix')`
+
+
+The first two methods return a JSON object with:
+
+* `resposeCode`
+* `handle`
+* `values`, which is a list of JSON objects (_entries_) that represent KV pairs that a record consists of, but with some more info:
+
+```
+{
+'index': 1,
+'type': 'URL', 
+'data':
+   {
+   'format': 'string',
+   'value': 'https://abd.def/000120_EBL_V0.xlsx'
+   }, 
+'ttl': 86400, 
+'timestamp': '2021-01-25T08:05:01Z'
+}
+```
+
+In case the type is `HS_ADMIN`, then the entry looks a bit different:
+
+```
+{
+'index': 100,
+'type': 'HS_ADMIN',
+'data': 
+   {
+   'format': 'admin', 
+   'value': 
+      {
+      'handle': '0.NA/21.123456',
+      'index': 200,
+      'permissions': '011111110011'
+      }
+   },
+'ttl': 86400,
+'timestamp': '2021-01-25T08:05:01Z'
+}
+```
+
+The third method returns a simple key-value dictionary, stripped off the index, ttl and timestamp. (Here, `HS_ADMIN` is simply represented as a string):
+
+```
+{
+   'URL': 'https://abd.def/000120_EBL_V0.xlsx',
+   'key1': 'value1',
+   'key2': 'value2',
+   'key3': 'value3',
+   'HS_ADMIN': "{'handle': '0.NA/21.T12996', 'index': 200, 'permissions': '011111110011'}"
+}
+```
+
+
+Example:
+
+```
+#resp = requests.get('http://hdl.handle.net/api/handles/21.T123456/0610bd95ee41a13')
+#resp.json()
+
+#record = pyclient.retrieve_handle_record_json('21.T123456/0610bd95ee41a13)
+#record
+
+{
+   'responseCode': 1,
+   'handle': '21.T123456/0610bd95ee41a13',
+   'values': [
+      {
+      'index': 1,
+      'type': 'URL', 
+      'data':
+         {
+         'format': 'string',
+         'value': 'https://abd.def/000120_EBL_V0.xlsx'
+         }, 
+      'ttl': 86400, 
+      'timestamp': '2021-01-25T08:05:01Z'
+      }, 
+      {
+      'index': 2, 
+      'type': 'CHECKSUM',
+      'data': 
+         {
+         'format': 'string', 
+         'value': '575b8540896e202082c9cf4'
+         }, 
+      'ttl': 86400,
+      'timestamp': '2021-01-25T08:05:01Z'
+      },
+      ...
+      {
+      'index': 100,
+      'type': 'HS_ADMIN',
+      'data': 
+         {
+         'format': 'admin', 
+         'value': 
+            {
+            'handle': '0.NA/21.T12996',
+            'index': 200,
+            'permissions': '011111110011'
+            }
+         },
+      'ttl': 86400,
+      'timestamp': '2021-01-25T08:05:01Z'
+      }
+   ]
+}
+
+#record = pyclient.retrieve_handle_record('21.T123456/0610bd95ee41a13)
+#record
+
+{
+   'URL': 'https://abd.def/000120_EBL_V0.xlsx',
+   'CHECKSUM': '575b8540896e202082c9cf4',
+   'HS_ADMIN': "{'handle': '0.NA/21.T12996', 'index': 200, 'permissions': '011111110011'}"
+}
+```
+
+
+## JSON formats: Upload
+
+When uploading, you can pass the values as key-value-pairs, or as JSON snippets. The former selects indices for you. The latter allows you to also specify _index_ and optionally _ttl_ and _HS_ADMIN_.
+
+
+Simple kv pairs:
+
+```
+kv_pairs = {
+   'URL': 'https://abd.def/000120_EBL_V0.xlsx',
+   'CHECKSUM': '575b8540896e202082c9cf4',
+   'key': 'value'
+}
+pyclient.register_handle_kv(handle, overwrite=True, **kv_pairs)
+# TODO TEST
+
+* This will always add a `HS_ADMIN` entry (as you cannot specify such an entry in this simple format, and we mustn't have handles without it).
+```
+
+JSON, more complex:
+
+```
+list_of_entries = [
+   {'index': 1, 'type': 'URL',      'data': 'https://abd.def/000120_EBL_V0.xlsx'},
+   {'index': 2, 'type': 'CHECKSUM', 'data': '575b8540896e202082c9cf4'},
+   {'index': 3, 'type': 'key',      'data': 'value', 'ttl':86400}
+]
+pyclient.register_handle_json(handle, overwrite=False, list_of_entries)
+```
+* You can optionally add a ttl (TODO: integer, right?). If not, the default is used by the Handle Server (TODO is is usually 86400, apparently).
+* You can also use the more complex _data_: `{'data': {'format': 'string', 'value': '575b854089'}}` instead of `{'data': '575b854089'}`. I THINK. TODO. ALSO CHECK IF integers are recognized.
+* An entry of type `HS_ADMIN` with some default values (can be customized) will be added if you do not provide one:
+```
+   {
+   'index': 100,
+   'type': 'HS_ADMIN',
+   'data':
+      {
+      'value':
+         {
+         'index': '200',
+         'handle': '0.NA/prefix',
+         'permissions': '011111110011'
+         },
+      'format':'admin'
+      }
+   }
+```
+
+
 # How to run the unit tests
 
 The simplest way (tested with python 3.7.1):
