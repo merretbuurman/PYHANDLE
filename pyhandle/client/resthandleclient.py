@@ -288,6 +288,12 @@ class RESTHandleClient(HandleClient):
                 response=response
             )
            
+    def retrieve_handle_record_kv(self, handle, handlerecord_json=None):
+        '''
+        Just a wrapper around "retrieve_handle_record(...)" for naming
+        consistency reasons.
+        '''
+        return self.retrieve_handle_record(handle, handlerecord_json)
         
     def retrieve_handle_record(self, handle, handlerecord_json=None):
         '''
