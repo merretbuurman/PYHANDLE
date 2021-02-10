@@ -623,10 +623,18 @@ class RESTHandleClient(HandleClient):
         # So we don't modify the caller's list:
         list_of_entries = copy.deepcopy(list_of_entries)
 
-        # Create admin entry
+        # Create admin entry and also check for "type" to be present
+        # The Handle Server would not raise an error if "type" is missing
+        # in an entry, but just omit that entry silently.
+        # (Merret tested this against a surfsara production server, 2021-02-10).
         keys = []
         for entry in list_of_entries:
-            keys.append(entry['type'])
+            try:
+                keys.append(entry['type'])
+            except KeyError as e:
+                msg = ('Cannot create entry without a type: %s' % entry)
+                LOGGER.error(msg)
+                raise BrokenHandleRecordException(msg=msg)
 
         if not 'HS_ADMIN' in keys:
             adminentry = self.__create_admin_entry(
