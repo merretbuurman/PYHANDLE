@@ -773,10 +773,22 @@ class RESTHandleClient(HandleClient):
                 msg='Could not create handle. Possibly you used HTTP instead of HTTPS?'
             )
         else:
+            # Example responses from Handle Server:
+            # When we pass "blablabla" as format (e.g. instead of "string"):
+            # HTTP 400: {'responseCode': 4, 'message': 'com.google.gson.JsonParseException: java.text.ParseException: Unexpected type blabla'}
+            # When we pass timestamps that are not timestamps, or that have wrong values (e.g. 66 seconds):
+            # HTTP 400: {'responseCode': 4, 'message': "com.google.gson.JsonParseException: java.text.ParseException: Can't parse 1968-01-99T66:66:66Z"}
+            # HTTP 400: {'responseCode': 4, 'message': "com.google.gson.JsonParseException: java.text.ParseException: Can't parse BLABLABLA"}
+            # When two entries have the same index:
+            # HTTP 409: {'responseCode': 201, 'message': 'Index conflict for 6', 'handle': '21.12118/TESTTESTTEST'}
+            # When we pass no value at all (only type and index):
+            # HTTP 400: {'responseCode': 4, 'message': 'com.google.gson.JsonParseException: java.lang.NullPointerException'}
+            # When we specify format "integer" but pass a string value:
+            # HTTP 400: {'responseCode': 4, 'message': 'com.google.gson.JsonParseException: java.text.ParseException: Unexpected type integer'}
             raise GenericHandleError(
                 operation=op,
                 handle=handle,
-                reponse=resp,
+                response=resp,
                 payload=put_payload
             )
 

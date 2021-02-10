@@ -468,7 +468,7 @@ class HandleSystemConnector(object):
                 raise GenericHandleError(
                     operation='Checking if username exists',
                     handle=handle,
-                    reponse=resp,
+                    response=resp,
                     msg='The check returned a different handle than was asked for.'
                 )
             return True

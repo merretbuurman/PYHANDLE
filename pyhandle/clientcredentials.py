@@ -269,7 +269,7 @@ class PIDClientCredentials(object):
                 self.__certificate_only = self.__get_path_and_check_file_existence(self.__certificate_only)
                 self.__all_args['certificate_only'] = self.__certificate_only
             except ValueError as e:
-                msg = '(certficate file): '+e.__str__()
+                msg = '(certificate file): '+e.__str__()
                 raise CredentialsFormatError(msg=msg)
 
         if self.__certificate_and_key:
@@ -277,7 +277,7 @@ class PIDClientCredentials(object):
                 self.__certificate_and_key = self.__get_path_and_check_file_existence(self.__certificate_and_key)
                 self.__all_args['certificate_and_key'] = self.__certificate_and_key
             except ValueError as e:
-                msg = '(certficate and key file): '+e.__str__()
+                msg = '(certificate and key file): '+e.__str__()
                 raise CredentialsFormatError(msg=msg)
 
         if self.__private_key:
