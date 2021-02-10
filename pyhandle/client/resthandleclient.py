@@ -645,6 +645,26 @@ class RESTHandleClient(HandleClient):
             )
             list_of_entries.append(adminentry)
 
+        # Check for timestamps
+        # TEST THIS!
+        for entry in list_of_entries:
+            if 'timestamp' in entry.keys():
+                
+                try:
+                    ts = entry['timestamp']
+                    datetime.datetime.strptime(ts,"%Y-%m-%dT%H:%M:%SZ")
+                    # If it can be parsed, no one will complain, but it will
+                    # be ignored by handle server:
+                    LOGGER.warn('Timestamp is likely to be ignored by Handle Server.')
+                
+                except ValueError as e:
+                    # If it cannot be parsed, Handle Server will throw an
+                    # error. But in case HS accepts more time stamp formats 
+                    # (now or in future), we just warn and not raise exception!
+                    msg = "Cannot parse timestamp. Probably HandleServer also won't be able, and return an error."
+                    LOGGER.warn(msg)
+                
+
         # Create record itself and put to server:
         return self.__handle_registering(handle, list_of_entries, overwrite)
    
