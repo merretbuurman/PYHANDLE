@@ -131,6 +131,7 @@ class PIDClientCredentials(object):
         util.add_missing_optional_args_with_value_none(args, useful_args)
 
         # Store args
+        # Danger: If any attribute is modified, this is not reflected in here!
         self.__all_args = args
 
         # Args that the constructor understands:
@@ -266,6 +267,7 @@ class PIDClientCredentials(object):
         if self.__certificate_only:
             try:
                 self.__certificate_only = self.__get_path_and_check_file_existence(self.__certificate_only)
+                self.__all_args['certificate_only'] = self.__certificate_only
             except ValueError as e:
                 msg = '(certficate file): '+e.__str__()
                 raise CredentialsFormatError(msg=msg)
@@ -273,6 +275,7 @@ class PIDClientCredentials(object):
         if self.__certificate_and_key:
             try:
                 self.__certificate_and_key = self.__get_path_and_check_file_existence(self.__certificate_and_key)
+                self.__all_args['certificate_and_key'] = self.__certificate_and_key
             except ValueError as e:
                 msg = '(certficate and key file): '+e.__str__()
                 raise CredentialsFormatError(msg=msg)
@@ -280,6 +283,7 @@ class PIDClientCredentials(object):
         if self.__private_key:
             try:
                 self.__private_key = self.__get_path_and_check_file_existence(self.__private_key)
+                self.__all_args['private_key'] = self.__private_key
             except ValueError as e:
                 msg = '(private key file): '+e.__str__()
                 raise CredentialsFormatError(msg=msg)

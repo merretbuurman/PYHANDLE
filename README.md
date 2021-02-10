@@ -69,6 +69,19 @@ Copyright 2015-2021, Deutsches Klimarechenzentrum GmbH, GRNET S.A., SURFsara
 
 (to be migrated to documentation)
 
+Instantiate:
+
+```
+
+credentials_file = './credentials/creds.json'
+# Path must be relative to current working dir
+# JSON file must contain absolute paths, or paths relative to the creds.json file!!
+
+creds = pyhandle.clientcredentials.PIDClientCredentials.load_from_JSON(credentials_file)
+client = pyhandle.handleclient.PyHandleClient('rest').instantiate_with_credentials(
+        creds, HTTPS_verify=https_verify)
+```
+
 
 * `register_handle_kv(handle, **kv-pairs)` allows to pass (additionally to the handle name) key-value pairs.
 

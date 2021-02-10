@@ -237,6 +237,9 @@ class RESTHandleClient(HandleClient):
         :return: An instance of the client.
         '''
         key_value_pairs = credentials.get_all_args()
+        # Potential danger: This returns all the args as stored when first
+        # creating the credentials objects. Subsequent modifications may not
+        # be contained (unless updated manually!)
 
         if config is not None:
             key_value_pairs.update(**config)  # passed config overrides json file

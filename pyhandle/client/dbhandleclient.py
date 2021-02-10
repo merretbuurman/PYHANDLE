@@ -47,6 +47,9 @@ class DBHandleClient(HandleClient):
 
         if isinstance(credentials, PIDClientCredentials):
             self.credentials = credentials.get_all_args()
+            # Potential danger: This returns all the args as stored when first
+            # creating the credentials objects. Subsequent modifications may not
+            # be contained (unless updated manually!)
         else:
             self.credentials = credentials
 
