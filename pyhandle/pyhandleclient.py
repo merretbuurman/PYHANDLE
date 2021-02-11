@@ -1,6 +1,10 @@
 class HandleClient(object):
     HANDLE_CLIENT = None
 
+    # TODO: What is this class for? Why not use PyhandleClient?
+    # TODO: Naming Chaos: This file is called pyhandleclient.py and contains HandleClient,
+    # while the other file is called handleclient.py and contains PyHandleClient.
+
     def retrieve_handle_record_json(self, handle):
         raise NotImplementedError()
 
@@ -65,4 +69,6 @@ class HandleClient(object):
 
     @classmethod
     def check_client(cls, client):
+        # TODO Rename this for more clarity.
+        # TODO Possibly move to PyHandleClient
         return client == cls.HANDLE_CLIENT
