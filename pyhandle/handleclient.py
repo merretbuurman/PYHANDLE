@@ -24,24 +24,25 @@ class PyHandleClient(object):
     ''' PYHANDLE main client class '''
 
     HANDLE_CLIENTS = [DBHandleClient, RESTHandleClient, BatchHandleClient]
+    ALLOWED_CLIENT_TYPES = ['rest', 'db', 'batch']
 
-    def __init__(self, client, credentials=None, batch_file_path=None):
+    def __init__(self, client_type, credentials=None, batch_file_path=None):
         '''
         Initialize a REST or Db client.
 
-        :param client: A string that can be 'rest' or 'db'
+        :param client_type: A string that can be 'rest' or 'db' or 'batch'
         :param credentials: Optional: key-value pairs to specify credentials for the MySQL database.
         '''
+        # TODO: The mysql-credentials should not be passed to this generic
+        # class, but hidden in a subclass.
 
-        allowed_args = ['rest', 'db', 'batch']
-
-        if client in allowed_args:
-            self.client = client
-            self.credentials = credentials
+        if client_type in self.ALLOWED_CLIENT_TYPES:
+            self.type = client_type # TODO Rename to client_type to avoid confusion.
+            self.credentials = credentials # TODO Rename to mysql_credentials to avoid confusion.
             self.batch_file_path = batch_file_path
             self.handle_client = self.select_handle_client()
         else:
-            raise ValueError("Allowed clients: 'rest', 'db' or 'batch'")
+            raise ValueError("Allowed client types: %s" % self.ALLOWED_CLIENT_TYPES)
 
     def select_handle_client(self):
         '''
@@ -49,14 +50,21 @@ class PyHandleClient(object):
         :return: Instance of the client.
         '''
 
-        for client in self.HANDLE_CLIENTS:
-            if client.check_client(self.client):
+        for ClientSubclass in self.HANDLE_CLIENTS:
+
+            # Find the correct client for our type:
+            if ClientSubclass.is_this_correct_client_type(self.client):
+
+                # Depending on the client type, pass different args.
+                # TODO: Shouldn't this kind of difference be hidden in subclass?
+                # Like this, we would not need the check_client method, we could
+                # just call the relevant subclass by name.
                 if self.client == 'db':
-                    return client(self.credentials)
+                    return ClientSubclass(self.credentials)
                 elif self.client == 'batch':
-                    return client(batch_file_path=self.batch_file_path)
+                    return ClientSubclass(batch_file_path=self.batch_file_path)
                 else:
-                    return client()
+                    return ClientSubclass()
 
     def create_batch_file(self, overwrite=False):
         return self.handle_client.create_batch_file(overwrite)

@@ -68,7 +68,6 @@ class HandleClient(object):
 
 
     @classmethod
-    def check_client(cls, client):
-        # TODO Rename this for more clarity.
+    def is_this_correct_client_type(cls, client_type):
         # TODO Possibly move to PyHandleClient
-        return client == cls.HANDLE_CLIENT
+        return client_type == cls.HANDLE_CLIENT
