@@ -636,6 +636,11 @@ class RESTHandleClient(HandleClient):
                 LOGGER.error(msg)
                 raise BrokenHandleRecordException(msg=msg)
 
+            if not 'index' in entry:
+                msg = ('Cannot create entry without an index: %s' % entry)
+                LOGGER.error(msg)
+                raise BrokenHandleRecordException(msg=msg)
+
         if not 'HS_ADMIN' in keys:
             adminentry = self.__create_admin_entry(
                 self.__handleowner,
@@ -646,7 +651,6 @@ class RESTHandleClient(HandleClient):
             list_of_entries.append(adminentry)
 
         # Check for timestamps
-        # TEST THIS!
         for entry in list_of_entries:
             if 'timestamp' in entry.keys():
                 
