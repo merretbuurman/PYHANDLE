@@ -37,7 +37,7 @@ class PyHandleClient(object):
         # class, but hidden in a subclass.
 
         if client_type in self.ALLOWED_CLIENT_TYPES:
-            self.type = client_type # TODO Rename to client_type to avoid confusion.
+            self.client = client_type # TODO Rename to client_type to avoid confusion.
             self.credentials = mysql_credentials # TODO Rename to mysql_credentials to avoid confusion.
             self.batch_file_path = batch_file_path
             self.handle_client = self.select_handle_client()
