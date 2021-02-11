@@ -26,19 +26,19 @@ class PyHandleClient(object):
     HANDLE_CLIENTS = [DBHandleClient, RESTHandleClient, BatchHandleClient]
     ALLOWED_CLIENT_TYPES = ['rest', 'db', 'batch']
 
-    def __init__(self, client_type, credentials=None, batch_file_path=None):
+    def __init__(self, client_type, mysql_credentials=None, batch_file_path=None):
         '''
         Initialize a REST or Db client.
 
         :param client_type: A string that can be 'rest' or 'db' or 'batch'
-        :param credentials: Optional: key-value pairs to specify credentials for the MySQL database.
+        :param mysql_credentials: Optional: key-value pairs to specify credentials for the MySQL database.
         '''
         # TODO: The mysql-credentials should not be passed to this generic
         # class, but hidden in a subclass.
 
         if client_type in self.ALLOWED_CLIENT_TYPES:
             self.type = client_type # TODO Rename to client_type to avoid confusion.
-            self.credentials = credentials # TODO Rename to mysql_credentials to avoid confusion.
+            self.credentials = mysql_credentials # TODO Rename to mysql_credentials to avoid confusion.
             self.batch_file_path = batch_file_path
             self.handle_client = self.select_handle_client()
         else:
