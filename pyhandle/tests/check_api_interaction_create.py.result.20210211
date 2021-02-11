@@ -1,0 +1,73 @@
+
+{
+
+    "responseCode": 1,
+    "handle": "21.xxx/TESTTESTTEST",
+    "values": [
+        {
+            "index": 1,
+            "type": "TEST",
+            "data": {
+                "format": "string",
+                "value": "This was added without a specified format."
+            },
+            "ttl": 86400,
+            "timestamp": "2021-02-11T14:27:06Z"
+        },
+        {
+            "index": 2,
+            "type": "TEST",
+            "data": {
+                "format": "string",
+                "value": "This was added with specified format 'string'."
+            },
+            "ttl": 86400,
+            "timestamp": "2021-02-11T14:27:06Z"
+        },
+        {
+            "index": 4,
+            "type": "TEST",
+            "data": {
+                "format": "string",
+                "value": "This should have ttl 200."
+            },
+            "ttl": 200,
+            "timestamp": "2021-02-11T14:27:06Z"
+        },
+        {
+            "index": 6,
+            "type": "TEST",
+            "data": {
+                "format": "string",
+                "value": "This should have a timestamp from 2017."
+            },
+            "ttl": 86400,
+            "timestamp": "2021-02-11T14:27:06Z"
+        },
+        {
+            "index": 10,
+            "type": "TEST",
+            "data": {
+                "format": "string",
+                "value": "This one has an index given as string '10'."
+            },
+            "ttl": 86400,
+            "timestamp": "2021-02-11T14:27:06Z"
+        },
+        {
+            "index": 100,
+            "type": "HS_ADMIN",
+            "data": {
+                "format": "admin",
+                "value": {
+                    "handle": "0.NA/21.xxx",
+                    "index": 200,
+                    "permissions": "011111110011"
+                }
+            },
+            "ttl": 86400,
+            "timestamp": "2021-02-11T14:27:06Z"
+        }
+    ]
+
+}
