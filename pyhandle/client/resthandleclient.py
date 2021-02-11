@@ -990,6 +990,10 @@ class RESTHandleClient(HandleClient):
         return handlerecord_json
 
     def __make_another_index(self, list_of_entries, url=False, hs_admin=False):
+        return self.make_another_index(list_of_entries, url, hs_admin)
+
+    @staticmethod
+    def make_another_index(list_of_entries, url=False, hs_admin=False):
         '''
         Find an index not yet used in the handle record and not reserved for
             any (other) special type.
